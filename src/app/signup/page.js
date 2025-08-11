@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from '../_components/Button';
 import Image from 'next/image';
+import { signInWithEmailAction } from '../_lib/actions';
 
 export const metadata = {
   title: 'Sign Up',
@@ -8,19 +9,19 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="m-auto mt-20 w-[24rem] rounded-lg border p-8 px-8 text-primary-950 shadow-lg">
+    <div className="m-auto mt-20 w-80 rounded-lg border p-8 px-8 text-primary-950 shadow-lg sm:w-[24rem]">
       <h1 className="mb-2 text-center text-2xl font-semibold">
         Create Account
       </h1>
       <p className="mb-4 text-center text-sm">
         Hey, Enter your details to create your account
       </p>
-      <form>
+      <form action={signInWithEmailAction}>
         <div className="mb-4">
           <input
             className="w-full rounded-md border border-neutral-400 p-2"
             type="text"
-            name="fullname"
+            name="fullName"
             placeholder="Full Name"
           />
         </div>
@@ -40,7 +41,7 @@ export default function Page() {
             placeholder="Password"
           />
         </div>
-        <Button>Sign Up</Button>
+        <Button type="submit">Sign Up</Button>
       </form>
       <p className="my-2 text-center text-sm">Or Sign up with</p>
       <form>
@@ -59,7 +60,7 @@ export default function Page() {
           Already have an account?
           <Link
             className="text-primary-600 underline hover:text-primary-700"
-            href="#"
+            href="/login"
           >
             Login
           </Link>
