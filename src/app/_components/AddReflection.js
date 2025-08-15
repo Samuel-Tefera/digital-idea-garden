@@ -39,7 +39,7 @@ export default function AddReflectction({
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-2 sm:px-4">
+    <div className="mx-auto mb-1 w-full max-w-4xl px-2 sm:px-4">
       <form
         onSubmit={handleSubmit}
         className="relative rounded-xl border border-neutral-700 bg-neutral-800 shadow-lg"
