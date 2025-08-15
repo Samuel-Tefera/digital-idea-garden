@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../_components/Button';
-import Image from 'next/image';
 import { signInWithEmailAction, signInWithGoogleAction } from '../_lib/actions';
 
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="m-auto mt-20 w-80 rounded-lg border p-8 px-8 text-primary-950 shadow-lg sm:w-[24rem]">
+    <div className="m-auto mt-20 w-80 rounded-xl border border-neutral-700 bg-neutral-900 p-8 text-primary-50 shadow-sm shadow-neutral-700 sm:w-[24rem]">
       <h1 className="mb-2 text-center text-2xl font-semibold">Login</h1>
       <p className="mb-4 text-center text-sm">
         Hey, Enter your details to get sign in to your account
@@ -17,7 +17,7 @@ export default function Page() {
       <form action={signInWithEmailAction}>
         <div className="mb-4">
           <input
-            className="w-full rounded-md border border-neutral-400 p-2"
+            className="w-full rounded-md border border-neutral-600 bg-neutral-800 p-2 text-neutral-100"
             type="email"
             name="email"
             placeholder="Email"
@@ -25,7 +25,7 @@ export default function Page() {
         </div>
         <div className="mb-4">
           <input
-            className="w-full rounded-md border border-neutral-400 p-2"
+            className="w-full rounded-md border border-neutral-600 bg-neutral-800 p-2 text-neutral-100"
             type="password"
             name="password"
             placeholder="Password"
@@ -35,7 +35,7 @@ export default function Page() {
       </form>
       <p className="my-2 text-center text-sm">Or Sign in with</p>
       <form action={signInWithGoogleAction}>
-        <button className="flex w-full items-center justify-center gap-2 rounded-md border border-primary-300 px-6 py-2 font-semibold text-primary-950">
+        <button className="flex w-full items-center justify-center gap-2 rounded-md border border-neutral-600 px-6 py-2 font-semibold text-primary-50">
           <Image
             src="https://authjs.dev/img/providers/google.svg"
             alt="Google logo"
