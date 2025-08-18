@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getStageIcon } from '../_utils/helper';
 
 function IdeaCard({ idea }) {
@@ -9,7 +10,7 @@ function IdeaCard({ idea }) {
       <div className="p-5">
         <div className="flex items-start justify-between">
           <span
-            className={`rounded-full px-2 py-1 text-xs font-semibold ${idea.stage}`}
+            className={`rounded-full px-2 py-1 text-xs font-semibold text-primary-50 ${idea.stage}`}
           >
             {getStageIcon(idea.stage)}{' '}
             {idea.stage.charAt(0).toUpperCase() + idea.stage.slice(1)}
@@ -34,9 +35,9 @@ function IdeaCard({ idea }) {
           {idea.title}
         </h3>
         <p className="mt-2 line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">
-          {idea.content}
+          {idea.description}
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        {/* <div className="mt-4 flex flex-wrap gap-2">
           {idea.tags.map((tag) => (
             <span
               key={tag}
@@ -45,15 +46,18 @@ function IdeaCard({ idea }) {
               #{tag}
             </span>
           ))}
-        </div>
+        </div> */}
       </div>
       <div className="flex items-center justify-between border-t border-neutral-200 bg-neutral-50 px-5 py-3 dark:border-neutral-600 dark:bg-neutral-700">
         <span className="text-xs text-neutral-500 dark:text-neutral-400">
           Last updated: {new Date(idea.updatedAt).toLocaleDateString()}
         </span>
-        <button className="text-sm font-medium text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
+        <Link
+          href={`ideas/${idea.id}`}
+          className="text-sm font-medium text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
+        >
           Cultivate →
-        </button>
+        </Link>
       </div>
     </div>
   );
