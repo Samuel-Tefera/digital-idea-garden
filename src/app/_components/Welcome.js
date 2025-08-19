@@ -1,19 +1,30 @@
-function Welcome({ ideas }) {
-  const useName = 'Samuel';
+import { redirect } from 'next/navigation';
+import { auth } from '../_lib/auth';
+import NewIdea from './NewIdea';
+
+async function Welcome({ ideas }) {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const userName = user?.name;
+
   return (
     <div className="mb-6 items-center justify-between rounded-xl px-6 py-2 text-primary-100 sm:flex">
       <div>
         <h2 className="mb-2 text-xl font-bold sm:text-2xl">
-          Welcome back, {useName}!
+          {ideas.length === 0 ? 'Welcome ' : 'Welcome back'}, {userName}!
         </h2>
         <p className="text-sm opacity-90 sm:text-xl">
-          Your ideas are growing well. You have {ideas.length} ideas in your
-          garden.
+          {ideas.length > 0
+            ? `Your ideas are growing well. You have ${ideas.length} ideas in your garden.`
+            : `You have ${ideas.length} ideas in your garden. Start by adding one`}
         </p>
       </div>
-      <button className="mt-4 rounded-lg bg-primary-600 px-4 py-2 font-medium text-primary-50 transition hover:bg-primary-700 hover:bg-opacity-90">
-        Plant new idea
-      </button>
+      <NewIdea />
     </div>
   );
 }
