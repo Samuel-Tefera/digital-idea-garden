@@ -37,20 +37,21 @@ function IdeaCard({ idea }) {
         <p className="mt-2 line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">
           {idea.description}
         </p>
-        {/* <div className="mt-4 flex flex-wrap gap-2">
-          {idea.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-neutral-100 px-2 py-1 text-xs text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div> */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {idea.tags &&
+            idea.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-neutral-100 px-2 py-1 text-xs text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
+              >
+                #{tag}
+              </span>
+            ))}
+        </div>
       </div>
       <div className="flex items-center justify-between border-t border-neutral-200 bg-neutral-50 px-5 py-3 dark:border-neutral-600 dark:bg-neutral-700">
         <span className="text-xs text-neutral-500 dark:text-neutral-400">
-          Last updated: {new Date(idea.updatedAt).toLocaleDateString()}
+          Last updated: {new Date(idea.updated_at).toLocaleDateString()}
         </span>
         <Link
           href={`ideas/${idea.id}`}
