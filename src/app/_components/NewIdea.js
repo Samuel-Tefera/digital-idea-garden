@@ -5,7 +5,6 @@ import NewIdeaForm from './NewIdeaForm';
 
 function NewIdea() {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(isOpen);
 
   return (
     <>

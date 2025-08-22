@@ -1,50 +1,22 @@
 'use client';
 
-import { FaChevronDown, FaHashtag, FaSeedling } from 'react-icons/fa';
+import { FaHashtag } from 'react-icons/fa';
 import Button from './Button';
 import Modal from './Modal';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 function NewIdeaForm({ isOpen, onClose }) {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    categories: [],
+    tags: [],
     stage: 'seed',
   });
-
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [customCategory, setCustomCategory] = useState('');
-
-  const handleCategorySelect = (category) => {
-    if (!formData.categories.includes(category)) {
-      setFormData((prev) => ({
-        ...prev,
-        categories: [...prev.categories, category],
-      }));
-    }
-    setShowCategoryDropdown(false);
-  };
-
-  const handleRemoveCategory = (categoryToRemove) => {
-    setFormData((prev) => ({
-      ...prev,
-      categories: prev.categories.filter((cat) => cat !== categoryToRemove),
-    }));
-  };
-
-  const handleAddCustomCategory = () => {
-    if (
-      customCategory.trim() &&
-      !formData.categories.includes(customCategory.trim())
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        categories: [...prev.categories, customCategory.trim()],
-      }));
-      setCustomCategory('');
-    }
-  };
+  const [tagInput, setTagInput] = useState('');
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const handleStageSelect = (stage) => {
     setFormData((prev) => ({
@@ -61,10 +33,53 @@ function NewIdeaForm({ isOpen, onClose }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setIsSubmiting(true);
+
+    const res = await fetch('/api/ideas', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (res.ok) router.refresh();
+
+    setFormData({
+      title: '',
+      description: '',
+      tags: [],
+      stage: 'seed',
+    });
+
+    setIsSubmiting(false);
+    onClose();
+  }
+
+  const handleTagInputKeyDown = (e) => {
+    if (
+      e.key === ' ' ||
+      e.key === 'Spacebar' ||
+      e.keyCode === 32 ||
+      e.key === 'Enter' ||
+      e.keyCode === 13
+    ) {
+      e.preventDefault();
+      if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+        setFormData((prev) => ({
+          ...prev,
+          tags: [...prev.tags, tagInput.trim()],
+        }));
+        setTagInput('');
+      }
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
   };
 
   return (
@@ -98,60 +113,32 @@ function NewIdeaForm({ isOpen, onClose }) {
         </div>
 
         <div className="mb-5 flex flex-col gap-2">
-          <label className="text-primary-50">Categories</label>
+          <label className="text-primary-50">Tags</label>
 
           <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-              className="flex w-full items-center justify-between rounded-lg border border-neutral-600 bg-neutral-800 p-2 text-primary-50 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <span>Select categories</span>
-              <FaChevronDown
-                className={`transition-transform ${showCategoryDropdown ? 'rotate-180' : ''}`}
-              />
-            </button>
-
-            {showCategoryDropdown && (
-              <div className="borde absolute left-0 right-0 top-full z-10 mt-1 max-h-60 overflow-y-auto rounded-lg border-neutral-600 bg-neutral-900 shadow-lg">
-                {[
-                  'Creativity',
-                  'Research',
-                  'Product',
-                  'Art',
-                  'Writing',
-                  'Innovation',
-                  'Technology',
-                  'Design',
-                  'Learning',
-                  'Collaboration',
-                  'Other',
-                ].map((category) => (
-                  <div
-                    key={category}
-                    onClick={() => handleCategorySelect(category)}
-                    className="cursor-pointer border-b border-neutral-800 p-3 text-primary-50 hover:bg-neutral-800"
-                  >
-                    {category}
-                  </div>
-                ))}
-              </div>
-            )}
+            <input
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleTagInputKeyDown}
+              className="flex w-full items-center justify-between rounded-lg border border-neutral-600 bg-neutral-800 p-3 text-primary-50 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Type tags and press space or enter to add"
+            />
           </div>
 
-          {formData.categories.length > 0 && (
+          {formData.tags.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
-              {formData.categories.map((category, index) => (
+              {formData.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center rounded-full bg-neutral-800 px-3 py-1 text-sm text-primary-50"
+                  className="inline-flex items-center rounded-full bg-primary-800 px-3 py-1 text-sm text-primary-50"
                 >
                   <FaHashtag className="mr-1" />
-                  {category}
+                  {tag}
                   <button
                     type="button"
-                    onClick={() => handleRemoveCategory(category)}
-                    className="ml-2 text-primary-600 hover:text-primary-800"
+                    onClick={() => handleRemoveTag(tag)}
+                    className="ml-2 text-primary-200 hover:text-primary-400"
                   >
                     &times;
                   </button>
@@ -167,9 +154,9 @@ function NewIdeaForm({ isOpen, onClose }) {
           </label>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { value: 'seed', label: 'Seed' },
-              { value: 'sprout', label: 'Sprout' },
-              { value: 'plant', label: 'Plant' },
+              { value: 'Seed', label: 'Seed' },
+              { value: 'Sprout', label: 'Sprout' },
+              { value: 'Plant', label: 'Plant' },
             ].map((stage) => (
               <button
                 key={stage.value}
@@ -186,7 +173,9 @@ function NewIdeaForm({ isOpen, onClose }) {
             ))}
           </div>
         </div>
-        <Button type="submit">Add new Idea</Button>
+        <Button pending={isSubmiting} type="submit">
+          Add new Idea
+        </Button>
       </form>
     </Modal>
   );
