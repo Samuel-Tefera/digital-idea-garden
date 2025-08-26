@@ -13,7 +13,7 @@ async function Page({ params }) {
     <div className="grid h-full">
       <IdeaTitle idea={idea} />
       <ReflectionBoard reflections={reflections} />
-      <AddReflection ideaId={idea.id} />
+      <AddReflection idea={idea} reflections={reflections} />
     </div>
   );
 }
