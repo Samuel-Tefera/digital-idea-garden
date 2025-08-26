@@ -4,9 +4,8 @@ import ReflectionBoard from '@/app/_components/ReflectionBoard';
 import { getIdeaDetail } from '@/app/_lib/data-services';
 
 async function Page({ params }) {
-  const { ideaId } = params;
+  const { ideaId } = await params;
   const data = await getIdeaDetail(ideaId);
-  console.log(data);
 
   const { idea, reflections } = data;
 
@@ -14,7 +13,7 @@ async function Page({ params }) {
     <div className="grid h-full">
       <IdeaTitle idea={idea} />
       <ReflectionBoard reflections={reflections} />
-      <AddReflection />
+      <AddReflection ideaId={idea.id} />
     </div>
   );
 }
