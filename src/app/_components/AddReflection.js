@@ -6,14 +6,11 @@ import { FaArrowUp } from 'react-icons/fa';
 import SpinnerMini from './SpinnerMini';
 import { useRouter } from 'next/navigation';
 
-export default function AddReflectction({
-  ideaId,
-  onSuggest = () => console.log('get AI suggestion'),
-  placeholder = 'Add your reflection...',
-}) {
+export default function AddReflectction({ idea, reflections }) {
   const [value, setValue] = useState('');
   const [source, setSource] = useState('user');
   const [isSubmiting, setIsSumiting] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const textareaRef = useRef(null);
   const router = useRouter();
 
@@ -36,7 +33,7 @@ export default function AddReflectction({
 
     const res = await fetch('/api/reflections', {
       method: 'POST',
-      body: JSON.stringify({ content: trimmed, ideaId, source }),
+      body: JSON.stringify({ content: trimmed, ideaId: idea.id, source }),
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -53,11 +50,38 @@ export default function AddReflectction({
     }
   }
 
-  const handleAISuggestion = () => {
-    // When implemented, this should set the source to 'ai'
+  async function handleAISuggestion() {
+    const prompt = `We are inside a Digital Idea Garden where thoughts grow like seeds.
+                I will give you an IDEA and some REFLECTIONS.
+                Your role is to respond in under 100 words, focusing only on useful features or directions that could be added to the idea.
+                Avoid repeating what I already gave you.
+                Do not use lists, bullets, or headings—just write in one natural paragraph, like we are casually brainstorming together.
+
+
+                IDEA: ${idea.title}
+                'REFLECTIONS: ${reflections?.toString()}
+`;
+
     setSource('ai');
-    onSuggest();
-  };
+    setIsSuggesting(true);
+    const res = await fetch('/api/agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const agentRes = await fetch('/api/reflections', {
+        method: 'POST',
+        body: JSON.stringify({ content: data.output, ideaId: idea.id, source }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (agentRes.ok) router.refresh();
+    }
+
+    setIsSuggesting(false);
+  }
 
   const handleUserInput = (e) => {
     setValue(e.target.value);
@@ -87,7 +111,7 @@ export default function AddReflectction({
             onChange={handleUserInput}
             onKeyDown={handleKeyDown}
             rows={1}
-            placeholder={placeholder}
+            placeholder="Add your reflection..."
             className="flex-1 resize-none bg-transparent px-2 py-2 text-sm leading-normal text-neutral-100 outline-none placeholder:text-neutral-500 md:text-base"
             style={{ maxHeight: '150px' }}
           />
@@ -98,7 +122,7 @@ export default function AddReflectction({
               onClick={handleAISuggestion}
               className="h-8 items-center rounded-lg border border-neutral-700 px-1 text-sm text-neutral-200 transition hover:bg-neutral-700/50 sm:h-10 sm:px-3"
             >
-              Get AI suggestion
+              {isSuggesting ? <SpinnerMini /> : 'Get AI suggestion'}
             </button>
             <button
               type="submit"
