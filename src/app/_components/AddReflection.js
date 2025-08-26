@@ -3,14 +3,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiPaperclip } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
+import SpinnerMini from './SpinnerMini';
+import { useRouter } from 'next/navigation';
 
 export default function AddReflectction({
-  onSend = (text) => console.log('send:', text),
+  ideaId,
   onSuggest = () => console.log('get AI suggestion'),
   placeholder = 'Add your reflection...',
 }) {
   const [value, setValue] = useState('');
+  const [source, setSource] = useState('user');
+  const [isSubmiting, setIsSumiting] = useState(false);
   const textareaRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const el = textareaRef.current;
@@ -23,12 +28,22 @@ export default function AddReflectction({
     el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
   }, [value]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setIsSumiting(true);
     const trimmed = value.trim();
     if (!trimmed) return;
-    onSend(trimmed);
+
+    const res = await fetch('/api/reflections', {
+      method: 'POST',
+      body: JSON.stringify({ content: trimmed, ideaId, source }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
     setValue('');
+    setSource('user');
+    if (res.ok) router.refresh();
+    setIsSumiting(false);
   }
 
   function handleKeyDown(e) {
@@ -37,6 +52,17 @@ export default function AddReflectction({
       handleSubmit(e);
     }
   }
+
+  const handleAISuggestion = () => {
+    // When implemented, this should set the source to 'ai'
+    setSource('ai');
+    onSuggest();
+  };
+
+  const handleUserInput = (e) => {
+    setValue(e.target.value);
+    setSource('user');
+  };
 
   return (
     <div className="mx-auto mb-1 w-full max-w-4xl px-2 sm:px-4">
@@ -58,7 +84,7 @@ export default function AddReflectction({
           <textarea
             ref={textareaRef}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={handleUserInput}
             onKeyDown={handleKeyDown}
             rows={1}
             placeholder={placeholder}
@@ -69,7 +95,7 @@ export default function AddReflectction({
           <div className="absolute bottom-2 right-2 z-10 flex shrink-0 items-center gap-2">
             <button
               type="button"
-              onClick={onSuggest}
+              onClick={handleAISuggestion}
               className="h-8 items-center rounded-lg border border-neutral-700 px-1 text-sm text-neutral-200 transition hover:bg-neutral-700/50 sm:h-10 sm:px-3"
             >
               Get AI suggestion
@@ -77,18 +103,23 @@ export default function AddReflectction({
             <button
               type="submit"
               aria-label="Send"
-              disabled={!value.trim()}
+              disabled={!value.trim() || isSubmiting}
               className={`grid h-8 w-10 place-items-center rounded-full transition sm:h-10 ${
-                value.trim()
+                value.trim() && !isSubmiting
                   ? 'bg-blue-600 hover:bg-blue-700'
                   : 'cursor-not-allowed bg-neutral-700'
               }`}
             >
-              <FaArrowUp size={16} className="text-white" />
+              {isSubmiting ? (
+                <SpinnerMini />
+              ) : (
+                <FaArrowUp size={16} className="text-white" />
+              )}
             </button>
           </div>
         </div>
         <div className="h-9"></div>
+        <input name="source" type="hidden" value={source} />
       </form>
     </div>
   );
