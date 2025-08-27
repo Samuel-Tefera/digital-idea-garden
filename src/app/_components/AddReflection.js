@@ -62,7 +62,6 @@ export default function AddReflectction({ idea, reflections }) {
                 'REFLECTIONS: ${reflections?.toString()}
 `;
 
-    setSource('ai');
     setIsSuggesting(true);
     const res = await fetch('/api/agent', {
       method: 'POST',
@@ -71,6 +70,7 @@ export default function AddReflectction({ idea, reflections }) {
     });
 
     if (res.ok) {
+      setSource('ai');
       const data = await res.json();
       const agentRes = await fetch('/api/reflections', {
         method: 'POST',
