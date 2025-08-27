@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 
 export default function AddReflectction({ idea, reflections }) {
   const [value, setValue] = useState('');
-  const [source, setSource] = useState('user');
   const [isSubmiting, setIsSumiting] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
   const textareaRef = useRef(null);
@@ -33,12 +32,15 @@ export default function AddReflectction({ idea, reflections }) {
 
     const res = await fetch('/api/reflections', {
       method: 'POST',
-      body: JSON.stringify({ content: trimmed, ideaId: idea.id, source }),
+      body: JSON.stringify({
+        content: trimmed,
+        ideaId: idea.id,
+        source: 'user',
+      }),
       headers: { 'Content-Type': 'application/json' },
     });
 
     setValue('');
-    setSource('user');
     if (res.ok) router.refresh();
     setIsSumiting(false);
   }
@@ -70,11 +72,14 @@ export default function AddReflectction({ idea, reflections }) {
     });
 
     if (res.ok) {
-      setSource('ai');
       const data = await res.json();
       const agentRes = await fetch('/api/reflections', {
         method: 'POST',
-        body: JSON.stringify({ content: data.output, ideaId: idea.id, source }),
+        body: JSON.stringify({
+          content: data.output,
+          ideaId: idea.id,
+          source: 'ai',
+        }),
         headers: { 'Content-Type': 'application/json' },
       });
       if (agentRes.ok) router.refresh();
@@ -85,7 +90,6 @@ export default function AddReflectction({ idea, reflections }) {
 
   const handleUserInput = (e) => {
     setValue(e.target.value);
-    setSource('user');
   };
 
   return (
@@ -143,7 +147,6 @@ export default function AddReflectction({ idea, reflections }) {
           </div>
         </div>
         <div className="h-9"></div>
-        <input name="source" type="hidden" value={source} />
       </form>
     </div>
   );
