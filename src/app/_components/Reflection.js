@@ -5,7 +5,7 @@ function Reflection({ reflection }) {
     <div key={reflection.id} className="flex justify-start">
       <div
         className={`w-full rounded-md border-l-4 px-4 py-2 ${
-          reflection.source === 'AI'
+          reflection.source === 'ai'
             ? 'border-primary-500 bg-primary-50 dark:bg-primary-950'
             : 'border-neutral-400 bg-white dark:bg-neutral-800'
         }`}
