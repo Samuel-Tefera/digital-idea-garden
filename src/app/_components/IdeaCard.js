@@ -1,7 +1,43 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { getStageIcon } from '../_utils/helper';
+import { HiDotsVertical } from 'react-icons/hi';
+import IdeaCardMenu from './IdeaCardMenu';
 
 function IdeaCard({ idea }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const menuButtonRef = useRef(null);
+
+  const handleMenuToggle = (e) => {
+    e.stopPropagation();
+    if (menuOpen) {
+      setMenuOpen(false);
+    } else {
+      const rect = menuButtonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        x: rect.right - 180,
+        y: rect.bottom + 5,
+      });
+      setMenuOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [menuOpen]);
+
   return (
     <div
       key={idea.id}
@@ -15,21 +51,15 @@ function IdeaCard({ idea }) {
             {getStageIcon(idea.stage)}{' '}
             {idea.stage.charAt(0).toUpperCase() + idea.stage.slice(1)}
           </span>
-          <button className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="relative">
+            <button
+              ref={menuButtonRef}
+              onClick={handleMenuToggle}
+              className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-              />
-            </svg>
-          </button>
+              <HiDotsVertical className="h-5 w-5" />
+            </button>
+          </div>
         </div>
         <h3 className="mt-3 text-lg font-semibold text-neutral-900 dark:text-white">
           {idea.title}
@@ -60,6 +90,13 @@ function IdeaCard({ idea }) {
           Cultivate →
         </Link>
       </div>
+
+      <IdeaCardMenu
+        idea={idea}
+        ideaId={idea.id}
+        isOpen={menuOpen}
+        position={menuPosition}
+      />
     </div>
   );
 }
