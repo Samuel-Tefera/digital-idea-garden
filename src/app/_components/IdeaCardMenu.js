@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { deleteIdeaAction } from '../_lib/actions';
 
-function IdeaCardMenu({ isOpen, position, onClose, ideaId }) {
+function IdeaCardMenu({ isOpen, position, ideaId }) {
   if (!isOpen) return null;
 
   return (
@@ -15,8 +16,8 @@ function IdeaCardMenu({ isOpen, position, onClose, ideaId }) {
         View Details
       </Link>
       <button
-        onClick={() => {
-          onClose();
+        onClick={async () => {
+          await deleteIdeaAction(ideaId);
         }}
         className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-neutral-100 dark:text-red-500 dark:hover:bg-neutral-700"
       >

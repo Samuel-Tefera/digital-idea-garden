@@ -92,7 +92,6 @@ function IdeaCard({ idea }) {
       </div>
 
       <IdeaCardMenu
-        idea={idea}
         ideaId={idea.id}
         isOpen={menuOpen}
         position={menuPosition}
