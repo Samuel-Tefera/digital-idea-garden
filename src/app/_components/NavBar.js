@@ -20,9 +20,6 @@ function NavBar() {
         <li className="hover:text-primary-300">
           <Link href="/ideagarden">My Ideas</Link>
         </li>
-        <li className="hover:text-primary-300">
-          <Link href="#">Show Case</Link>
-        </li>
         <li>
           <SignOutButton />
         </li>
