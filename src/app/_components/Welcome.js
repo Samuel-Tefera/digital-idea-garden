@@ -1,14 +1,8 @@
-import { redirect } from 'next/navigation';
 import { auth } from '../_lib/auth';
 import NewIdea from './NewIdea';
 
 async function Welcome({ ideas }) {
-  const session = await auth();
-  const user = session?.user;
-
-  if (!user) {
-    redirect('/login');
-  }
+  const { user } = await auth();
 
   const userName = user?.name;
 
