@@ -15,7 +15,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          href="/ideasgarden"
+          href="/ideagarden"
           className="inline-flex items-center justify-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-white transition-colors hover:bg-primary-500"
         >
           Back to your garden
