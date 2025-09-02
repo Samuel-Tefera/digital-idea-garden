@@ -8,3 +8,13 @@ export async function deleteIdeaAction(ideaId) {
   if (error) throw new Error('Idea can not be deleted');
   revalidatePath('/ideagarden');
 }
+
+export async function updateIdeaStageAction(ideaId, newStage) {
+  const { error } = await supabase
+    .from('ideas')
+    .update({ stage: newStage })
+    .eq('id', ideaId)
+    .select();
+  if (error) throw new Error('Idea stage not updated.');
+  revalidatePath(`/ideas/${ideaId}`);
+}
