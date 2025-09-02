@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { supabase } from './supabase';
 
 export async function getIdeas(userId) {
@@ -20,12 +21,14 @@ export async function getIdeaDetail(ideaId) {
 
   if (ideaError) throw new Error('Idea can not be loaded');
 
+  if (!idea) notFound();
+
   const { data: reflections, error } = await supabase
     .from('reflections')
     .select('*')
     .eq('idea_id', ideaId);
 
-  if (error) throw new Error('Idea can not be loaded');
+  if (error) throw new Error('Reflections can not be loaded');
 
   return { idea, reflections };
 }
