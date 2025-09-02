@@ -1,6 +1,11 @@
+import { redirect } from 'next/navigation';
 import NavBar from '../_components/NavBar';
+import { auth } from '../_lib/auth';
 
-function Layout({ children }) {
+async function Layout({ children }) {
+  const session = await auth();
+  if (!session?.user) redirect('/login');
+
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
       <header>

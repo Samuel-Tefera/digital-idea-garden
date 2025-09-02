@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation';
 
 export default async function Page() {
   const { user } = await auth();
-  if (!user) redirect('/login');
 
   const ideas = await getIdeas(user.id);
 
