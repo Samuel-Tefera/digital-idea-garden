@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Digital Idea Garden
+
+**Digital Idea Garden** is a creative companion app where ideas grow like plants.
+Capture your sparks as **Seeds**, refine them into **Sprouts**, and nurture them into full **Plants**. With reflections, AI-powered suggestions, and progress tracking, this app helps you organize, grow, and never lose sight of your ideas.
+
+---
+
+## Features
+
+- **User Authentication**
+  - Secure sign-up and login using Google or email/password (NextAuth + Supabase).
+- **Idea Lifecycle**
+  - Create and manage ideas through growth stages: _Seed → Sprout → Plant_.
+- **Reflections**
+  - Add thoughts, notes, and progress updates to ideas over time.
+- **AI Suggestions**
+  - Get smart recommendations for developing and connecting your ideas.
+- **Dashboard**
+  - Personal space showing all your ideas and their current stage.
+- **Clean UI**
+  - Minimal design with garden-inspired colors, dark mode support, and smooth navigation.
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js (App Router), React, Tailwind CSS
+- **Authentication:** next-auth.js
+- **Backend & Database:** Supabase
+- **AI Integration:** Free AI API (configurable)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/digital-idea-garden.git
+   cd digital-idea-garden
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Set up environment variables**
+   Create a .env.local file with:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  NEXTAUTH_SECRET=your_secret
+  NEXTAUTH_URL=http://localhost:3000
+  SUPABASE_URL=your_supabase_url
+  SUPABASE_KEY=your_supabase_key
+  GEMINI_API_KEY=your_gemini_api_key
+  GOOGLE_CLIENT_ID=your_google_client_id
+  GOOGLE_CLIENT_SECRET=your_google_client_secret
+  NEXT_PUBLIC_BASE_URL=http://localhost:3000  # FOR DEVELOPMENT
+  NEXTAUTH_URL=http://localhost:3000  # FOR DEVELOPMENT
+  NEXTAUTH_SECRET=your_nextauth_client_secret
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. **Run the app**
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+   npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
